@@ -37,11 +37,12 @@ export default {
     const submit = () => {
       const post = {
         title: props.post.title,
-        id: props.post.id??Date.now(),
-        checkout: false,
+        id: props.post.id ?? Date.now(),
+        completed: props.post.completed ?? false,
       };
       props.post.title = "";
-      props.post.id = null;     
+      props.post.id = null;
+      props.post.completed = false;
       context.emit("add-post", post);
     };
     watch(props.post, () => {

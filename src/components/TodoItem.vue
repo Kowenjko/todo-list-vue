@@ -9,9 +9,9 @@
         type="checkbox"
         value=""
         aria-label="..."
-        :checked="post.checkout"
+        :checked="post.completed"
       />
-      <s v-if="post.checkout">
+      <s v-if="post.completed">
         {{ post.title }}
       </s>
       <span v-else>{{ post.title }}</span>
