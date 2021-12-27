@@ -10,7 +10,7 @@
         id="form3"
         class="form-control form-control border"
       />
-      <label class="form-label" for="form3">Search</label>
+      <label class="form-label" for="form3">Search...</label>
     </div>
     <div class="mt-2 ps-4 pb-2 text-muted">
       <span>Sorted:</span>

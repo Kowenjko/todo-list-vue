@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, watch, onMounted } from "vue";
 import AddTodo from "@/components/AddTodo.vue";
 import TodoList from "@/components/TodoList.vue";
 import TabsNav from "@/components/TabsNav.vue";
@@ -85,7 +85,7 @@ export default {
       tabNav,
       postRemove,
       tempPost,
-      
+
       ...usePost(posts, postRemove),
       ...useToggle(posts),
       ...useSortSearch(tempPost),

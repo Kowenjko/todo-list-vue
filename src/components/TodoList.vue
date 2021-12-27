@@ -6,7 +6,7 @@
       role="tabpanel"
       aria-labelledby="ex1-tab-1"
     >
-      <ul class="list-group mb-0">
+      <ul v-if="posts.length > 0" class="list-group mb-0">
         <todo-item
           class="hover-mouse"
           v-for="post in sortedPost"
@@ -19,6 +19,9 @@
           @returnPost="$emit('returnPost', $event)"
         />
       </ul>
+      <h3 v-else class="text-center">
+        No list in {{ tabNav.toLowerCase() }}
+      </h3>
     </div>
   </div>
 </template>
