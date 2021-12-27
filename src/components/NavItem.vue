@@ -22,8 +22,7 @@ export default {
     active: {
       type: Boolean,
       required: true,
-    },
-   
+    },   
   },
 };
 </script>

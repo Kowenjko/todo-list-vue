@@ -6,11 +6,10 @@
       role="tabpanel"
       aria-labelledby="ex1-tab-1"
     >
-      <p>{{ sortedPost }}</p>
       <ul class="list-group mb-0">
         <todo-item
           class="hover-mouse"
-          v-for="post in posts"
+          v-for="post in sortedPost"
           :key="post.id"
           :post="post"
           :tabNav="tabNav"
@@ -26,7 +25,7 @@
 
 <script>
 import TodoItem from "./TodoItem.vue";
-import { watch, computed, toRefs } from "vue";
+import { computed, toRefs } from "vue";
 export default {
   components: { TodoItem },
   props: {
@@ -37,20 +36,26 @@ export default {
     tabNav: {
       type: String,
       required: true,
-    },  
-    sortedPost: {
+    },
+    sorted: {
       type: String,
       required: true,
-    },  
+    },
   },
   setup(props) {
-    const { sortedPost, posts } = toRefs(props);
-    
-    
-    watch(sortedPost, () => {
-      console.log(props.posts);
+    const { sorted, posts } = toRefs(props);
+
+    const sortedPost = computed(() => {
+      if (sorted.value === "Up") {
+        return posts.value.sort((a, b) => (a.title < b.title ? 1 : -1));
+      }
+      if (sorted.value === "Down") {
+        return posts.value.sort((a, b) => (a.title > b.title ? 1 : -1));
+      }
+      return posts.value;
     });
-    return {  };
+
+    return { sortedPost };
   },
 };
 </script>
