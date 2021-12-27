@@ -1,6 +1,6 @@
 <template>
   <section class="vh-100 gradient-custom">
-    <div class="container pt-5 h-100" >
+    <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col col-xl-10">
           <div class="card">
@@ -38,12 +38,15 @@
 </template>
 
 <script>
-import AddTodo from "./components/AddTodo.vue";
-import TodoList from "./components/TodoList.vue";
-import { ref, watch, onMounted, reactive, computed } from "vue";
-import TabsNav from "./components/TabsNav.vue";
-import SearchSortPost from "./components/SearchSortPost.vue";
-import { loadTodoList } from "./api";
+import { ref, watch, onMounted, computed } from "vue";
+import AddTodo from "@/components/AddTodo.vue";
+import TodoList from "@/components/TodoList.vue";
+import TabsNav from "@/components/TabsNav.vue";
+import SearchSortPost from "@/components/SearchSortPost.vue";
+import { usePost } from "@/composition/workWithPosts";
+import { useToggle } from "@/composition/toggle";
+import { useSortSearch } from "@/composition/sortSearch";
+import { loadTodoList } from "@/api";
 
 export default {
   components: { AddTodo, TodoList, TabsNav, SearchSortPost },
@@ -52,45 +55,6 @@ export default {
     const postRemove = ref([]);
     const tabNav = ref("All");
     const tempPost = ref([]);
-    const post = reactive({});
-    const searchPost = ref("");
-    const sortedPost = ref("");
-
-    const AddTodoForm = (post) => {
-      posts.value = posts.value.filter((elem) => elem.id !== post.id);
-      if (post.title) {
-        posts.value.push(post);
-      }
-    };
-    const searchPostTitle = (search) => (searchPost.value = search);
-
-    const chandgeStatus = (id) => {
-      posts.value.forEach((elem) => {
-        if (elem.id === id) {
-          elem.completed = !elem.completed;
-        }
-      });
-    };
-    const sortedDown = (sort) => (sortedPost.value = sort);
-
-    const sortedUp = (sort) => (sortedPost.value = sort);
-
-    const selectTabs = (tab) => (tabNav.value = tab);
-
-    const returnPost = (id) => {
-      posts.value = [
-        ...posts.value,
-        ...postRemove.value.filter((elem) => elem.id === id),
-      ];
-      postRemove.value = postRemove.value.filter((elem) => elem.id !== id);
-    };
-    const removePost = (id) => {
-      postRemove.value = [
-        ...postRemove.value,
-        ...posts.value.filter((elem) => elem.id === id),
-      ];
-      posts.value = posts.value.filter((elem) => elem.id !== id);
-    };
 
     const selectTabsNav = () => {
       if (tabNav.value === "All") {
@@ -103,14 +67,8 @@ export default {
         tempPost.value = postRemove.value;
       }
     };
-    const editPost = (id) =>
-      Object.assign(post, posts.value.filter((elem) => elem.id === id)[0]);
 
-    const searchPostsTodo = computed(() =>
-      tempPost.value.filter((post) =>
-        post.title.toLowerCase().includes(searchPost.value)
-      )
-    );
+    const selectTabs = (tab) => (tabNav.value = tab);
 
     onMounted(async () => {
       posts.value = await loadTodoList();
@@ -123,22 +81,14 @@ export default {
 
     return {
       posts,
-      AddTodoForm,
-      chandgeStatus,
       selectTabs,
       tabNav,
       postRemove,
-      removePost,
-      returnPost,
       tempPost,
-      editPost,
-      post,
-      searchPost,
-      searchPostsTodo,
-      sortedPost,
-      sortedDown,
-      sortedUp,
-      searchPostTitle,
+      
+      ...usePost(posts, postRemove),
+      ...useToggle(posts),
+      ...useSortSearch(tempPost),
     };
   },
 };

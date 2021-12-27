@@ -11,7 +11,7 @@
 </template>
 <script>
 import { ref } from "vue";
-import NavItem from "./NavItem.vue";
+import NavItem from "@/components/NavItem.vue";
 export default {
   components: { NavItem },
   setup(_, context) {

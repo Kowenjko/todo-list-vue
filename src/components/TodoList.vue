@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import TodoItem from "./TodoItem.vue";
+import TodoItem from "@/components/TodoItem.vue";
 import { computed, toRefs } from "vue";
 export default {
   components: { TodoItem },
