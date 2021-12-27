@@ -8,12 +8,35 @@
               <add-todo @add-post="AddTodoForm" :post="post" />
 
               <!-- Tabs navs -->
-              <tabs-nav @selectNav="selectTabs" />
+              <div class="d-flex">
+                <tabs-nav @selectNav="selectTabs" />
+                <div
+                  class="d-flex justify-content-center align-items-center mb-4 ms-2 form-outline"
+                >
+                  <input
+                    v-model="searchPost"
+                    type="text"
+                    id="form3"
+                    class="form-control form-control border"
+                  />
+                  <label class="form-label" for="form3">Search</label>
+                </div>
+                <div class="mt-2 ps-4 pb-2 text-muted">
+                  <span>Sorted:</span
+                  ><a @click="sortedDown" class="ps-2 text-info hover-mouse"
+                    ><i class="fas fa-long-arrow-alt-down"></i
+                  ></a>
+                  <a @click="sortedUp" class="ps-2 text-info hover-mouse"
+                    ><i class="fas fa-long-arrow-alt-up"></i
+                  ></a>
+                </div>
+              </div>
               <!-- Tabs navs -->
 
               <!-- Tabs content -->
               <todo-list
-                :posts="tempPost"
+                :sortedPost="sortedPost"
+                :posts="searchPostsTodo"
                 @change="chandgeStatus"
                 :tabNav="tabNav"
                 @remove="removePost"
@@ -32,7 +55,7 @@
 <script>
 import AddTodo from "./components/AddTodo.vue";
 import TodoList from "./components/TodoList.vue";
-import { ref, watch, onMounted, reactive } from "vue";
+import { ref, watch, onMounted, reactive, computed } from "vue";
 import TabsNav from "./components/TabsNav.vue";
 import { loadTodoList } from "./api";
 
@@ -44,6 +67,8 @@ export default {
     const tabNav = ref("All");
     const tempPost = ref([]);
     const post = reactive({});
+    const searchPost = ref("");
+    const sortedPost = ref(null);
 
     const AddTodoForm = (post) => {
       posts.value = posts.value.filter((elem) => elem.id !== post.id);
@@ -59,6 +84,14 @@ export default {
         }
       });
     };
+    const sortedDown = () => {
+      sortedPost.value = "Down";
+    };
+
+    const sortedUp = () => {
+      sortedPost.value = "Up";
+    };
+
     const selectTabs = (tab) => {
       tabNav.value = tab;
     };
@@ -88,13 +121,26 @@ export default {
         tempPost.value = postRemove.value;
       }
     };
-    const editPost = (id) => {
+    const editPost = (id) =>
       Object.assign(post, posts.value.filter((elem) => elem.id === id)[0]);
-    };
-    
+
+    const searchPostsTodo = computed(() =>
+      tempPost.value.filter((post) =>
+        post.title.toLowerCase().includes(searchPost.value)
+      )
+    );
+
     onMounted(async () => {
       posts.value = await loadTodoList();
       tempPost.value = posts.value;
+    });
+    watch(sortedPost, () => {
+      if (sortedPost.value == "Up") {
+        tempPost.value.sort((a, b) => (a.title < b.title ? 1 : -1));
+      }
+      if (sortedPost.value == "Down") {
+        tempPost.value.sort((a, b) => (a.title > b.title ? 1 : -1));
+      }
     });
     watch(tabNav, selectTabsNav);
     watch(posts, selectTabsNav);
@@ -112,6 +158,11 @@ export default {
       tempPost,
       editPost,
       post,
+      searchPost,
+      searchPostsTodo,
+      sortedPost,
+      sortedDown,
+      sortedUp,
     };
   },
 };
@@ -125,5 +176,8 @@ export default {
     radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%),
     radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #51d500 100%);
   background-blend-mode: screen, color-dodge, overlay, difference, normal;
+}
+.hover-mouse {
+  cursor: pointer;
 }
 </style>

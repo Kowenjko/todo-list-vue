@@ -18,7 +18,7 @@
     </div>
     <div v-if="tabNav==='Remove'">        
       <a data-mdb-toggle="tooltip" @click.stop="$emit('returnPost', post.id)">       
-        <i class="fas fa-undo-alt text-success"></i>
+        <i class="fas fa-undo-alt text-info"></i>
       </a>
     </div>
     <div v-else>
@@ -44,7 +44,5 @@ export default {
 };
 </script>
 <style scoped>
-.hover-mouse {
-  cursor: pointer;
-}
+
 </style>

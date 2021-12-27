@@ -33,7 +33,6 @@ export default {
   setup(props, context) {
     const input = ref(null);
 
-    console.log(props);
     const submit = () => {
       const post = {
         title: props.post.title,

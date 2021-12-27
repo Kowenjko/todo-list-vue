@@ -6,6 +6,7 @@
       role="tabpanel"
       aria-labelledby="ex1-tab-1"
     >
+      <p>{{ sortedPost }}</p>
       <ul class="list-group mb-0">
         <todo-item
           class="hover-mouse"
@@ -25,7 +26,7 @@
 
 <script>
 import TodoItem from "./TodoItem.vue";
-
+import { watch, computed, toRefs } from "vue";
 export default {
   components: { TodoItem },
   props: {
@@ -33,17 +34,25 @@ export default {
       type: Array,
       required: true,
     },
-    tabNav:{
-        type:String,
-        required: true,
-    }
+    tabNav: {
+      type: String,
+      required: true,
+    },  
+    sortedPost: {
+      type: String,
+      required: true,
+    },  
+  },
+  setup(props) {
+    const { sortedPost, posts } = toRefs(props);
+    
+    
+    watch(sortedPost, () => {
+      console.log(props.posts);
+    });
+    return {  };
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.hover-mouse {
-  cursor: cover;
-}
-</style>
+<style scoped></style>
